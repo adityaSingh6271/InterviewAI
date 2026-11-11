@@ -1,4 +1,4 @@
-import { createApp } from "./app";
+import app from "./app";
 import { closePool, pingDatabase } from "./config/db";
 import { env } from "./config/env";
 import { logger } from "./config/logger";
@@ -26,7 +26,7 @@ async function verifyDatabase(): Promise<void> {
   }
 }
 
-function registerShutdown(server: ReturnType<ReturnType<typeof createApp>["listen"]>): void {
+function registerShutdown(server: ReturnType<typeof app.listen>): void {
   let shuttingDown = false;
 
   const shutdown = (signal: NodeJS.Signals): void => {
@@ -83,7 +83,6 @@ async function start(): Promise<void> {
   registerProcessHandlers();
   await verifyDatabase();
 
-  const app = createApp();
   const server = app.listen(env.port, () => {
     logger.info("Server listening", {
       environment: env.nodeEnv,
