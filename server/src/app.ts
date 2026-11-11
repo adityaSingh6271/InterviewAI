@@ -1,3 +1,4 @@
+import type {} from "./types/express";
 import compression from "compression";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -26,9 +27,9 @@ export function createApp(): Express {
 
   app.disable("x-powered-by");
 
-  // Only meaningful behind a reverse proxy (production); trusting X-Forwarded-For
+  // Only meaningful behind a reverse proxy (production / Vercel); trusting X-Forwarded-For
   // when there is no proxy would let clients spoof their own rate-limit key.
-  if (env.isProduction) {
+  if (env.isProduction || Boolean(process.env.VERCEL)) {
     app.set("trust proxy", 1);
   }
 
@@ -59,6 +60,17 @@ export function createApp(): Express {
   app.use(compression());
   app.use(cookieParser()); // must precede the auth routes that read the cookie
   app.use(requestId); // correlation id + request logging (PDF 15/17)
+  app.get("/", (_req, res) => {
+    res.status(200).json({
+      success: true,
+      data: {
+        service: "ai-interviewer-api",
+        status: "ok",
+        health: "/api/v1/health",
+      },
+    });
+  });
+
   app.use("/api/v1", globalLimiter); // per-IP throttle before any route (PDF 26)
   app.use("/api/v1", apiRouter);
 

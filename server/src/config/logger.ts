@@ -13,14 +13,20 @@ const { combine, timestamp, errors, json, printf, colorize } = winston.format;
  * - Never log passwords, tokens, or SQL parameter values.
  */
 
-/** Always writes JSON so log shippers can parse it. */
-const fileTransport = new DailyRotateFile({
-  filename: path.join("logs", "application-%DATE%.log"),
-  datePattern: "YYYY-MM-DD",
-  maxSize: "20m",
-  maxFiles: "14d",
-  format: combine(timestamp(), errors({ stack: true }), json()),
-});
+const isServerless = Boolean(
+  process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME,
+);
+
+/** Always writes JSON so log shippers can parse it (disabled on read-only serverless FS). */
+const fileTransport = isServerless
+  ? null
+  : new DailyRotateFile({
+      filename: path.join("logs", "application-%DATE%.log"),
+      datePattern: "YYYY-MM-DD",
+      maxSize: "20m",
+      maxFiles: "14d",
+      format: combine(timestamp(), errors({ stack: true }), json()),
+    });
 
 /** Human-readable in development, JSON in production. */
 const consoleFormat = env.isProduction
@@ -44,5 +50,8 @@ const consoleFormat = env.isProduction
 export const logger = winston.createLogger({
   level: env.logLevel,
   defaultMeta: { service: "ai-interviewer-server" },
-  transports: [fileTransport, new winston.transports.Console({ format: consoleFormat })],
+  transports: [
+    ...(fileTransport ? [fileTransport] : []),
+    new winston.transports.Console({ format: consoleFormat }),
+  ],
 });

@@ -71,7 +71,11 @@ const schema = Joi.object({
     "any.required": "JWT_REFRESH_SECRET is required",
   }),
   BCRYPT_ROUNDS: Joi.number().integer().min(10).max(15).default(10),
-  DB_POOL_MAX: Joi.number().integer().min(1).max(100).default(10),
+  DB_POOL_MAX: Joi.number()
+    .integer()
+    .min(1)
+    .max(100)
+    .default(process.env.VERCEL ? 3 : 10),
   SLOW_QUERY_MS: Joi.number().integer().min(1).default(200),
   LOG_LEVEL: Joi.string().valid("error", "warn", "info", "debug").optional(),
 }).unknown(true);
