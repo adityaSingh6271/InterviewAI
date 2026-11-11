@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import Sidebar from "../components/Sidebar";
 import { MenuIcon } from "../components/Icons";
@@ -27,11 +27,11 @@ export default function DashboardLayout({
   const dispatch = useAppDispatch();
   const isCollapsed = useAppSelector((state) => state.ui.isSidebarCollapsed);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
 
   // Guard: anonymous visitors are sent to the login page.
   useEffect(() => {

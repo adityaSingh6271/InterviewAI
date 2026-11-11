@@ -34,9 +34,9 @@ export default function RechartsPerformance({
   attempts,
 }: RechartsPerformanceProps) {
   const [timeframe, setTimeframe] = useState<Timeframe>("Last 30 Days");
+  const [mountNow] = useState<number>(() => Date.now());
 
   const chartData = useMemo<PerformanceChartPoint[]>(() => {
-    const now = Date.now();
     const daysLimit =
       timeframe === "Last 7 Days"
         ? 7
@@ -49,7 +49,7 @@ export default function RechartsPerformance({
     const withinTimeframe = (iso?: string | null) => {
       if (!iso || daysLimit === Infinity) return true;
       const ms = new Date(iso).getTime();
-      return !Number.isNaN(ms) && now - ms <= daysLimit * 24 * 60 * 60 * 1000;
+      return !Number.isNaN(ms) && mountNow - ms <= daysLimit * 24 * 60 * 60 * 1000;
     };
 
     // Prefer evaluated attempt scores when available (real simulation trajectory)
@@ -117,7 +117,7 @@ export default function RechartsPerformance({
         return point;
       })
       .filter((d): d is PerformanceChartPoint => d !== null);
-  }, [interviews, attempts, timeframe]);
+  }, [interviews, attempts, timeframe, mountNow]);
 
   const hasAttempts = chartData.some((d) => "attemptScore" in d);
   const hasMatch = chartData.some((d) => "matchScore" in d);

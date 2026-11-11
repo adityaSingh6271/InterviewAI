@@ -14,25 +14,27 @@ const steps = [
   { label: "Generating structured multi-round interview curriculum", icon: Sparkles },
 ];
 
+function getPhaseStepIndex(currentPhaseText?: string): number | null {
+  if (!currentPhaseText) return null;
+  if (currentPhaseText.includes("Analyzing Job")) return 0;
+  if (currentPhaseText.includes("Parsing Resume")) return 1;
+  if (currentPhaseText.includes("Running Match")) return 2;
+  if (currentPhaseText.includes("Synthesizing")) return 3;
+  return null;
+}
+
 export default function AnalysisProgress({ currentPhaseText }: AnalysisProgressProps) {
-  const [activeStepIndex, setActiveStepIndex] = useState(0);
+  const [autoStepIndex, setAutoStepIndex] = useState(0);
+  const derivedStepIndex = getPhaseStepIndex(currentPhaseText);
+  const activeStepIndex = derivedStepIndex ?? autoStepIndex;
 
   useEffect(() => {
-    if (currentPhaseText?.includes("Analyzing Job")) {
-      setActiveStepIndex(0);
-    } else if (currentPhaseText?.includes("Parsing Resume")) {
-      setActiveStepIndex(1);
-    } else if (currentPhaseText?.includes("Running Match")) {
-      setActiveStepIndex(2);
-    } else if (currentPhaseText?.includes("Synthesizing")) {
-      setActiveStepIndex(3);
-    } else {
-      const timer = setInterval(() => {
-        setActiveStepIndex((prev) => (prev < steps.length - 1 ? prev + 1 : prev));
-      }, 750);
-      return () => clearInterval(timer);
-    }
-  }, [currentPhaseText]);
+    if (derivedStepIndex !== null) return;
+    const timer = setInterval(() => {
+      setAutoStepIndex((prev) => (prev < steps.length - 1 ? prev + 1 : prev));
+    }, 750);
+    return () => clearInterval(timer);
+  }, [derivedStepIndex]);
 
   return (
     <div className="flex flex-col items-center justify-center p-8 md:p-12 text-center bg-white rounded-2xl border border-slate-200 shadow-xs animate-in fade-in duration-200">

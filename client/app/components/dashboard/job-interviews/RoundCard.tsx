@@ -24,29 +24,28 @@ interface RoundCardProps {
   onViewDetails?: (round: InterviewRound) => void;
 }
 
-const getRoundIcon = (type: string) => {
+function RoundTypeIcon({ type }: { type: string }) {
   switch (type) {
     case "technical":
-      return Cpu;
+      return <Cpu className="size-3 text-[#0C356A]" />;
     case "coding":
-      return Code;
+      return <Code className="size-3 text-[#0C356A]" />;
     case "system_design":
-      return Layers;
+      return <Layers className="size-3 text-[#0C356A]" />;
     case "behavioral":
-      return MessageSquare;
+      return <MessageSquare className="size-3 text-[#0C356A]" />;
     case "hr":
-      return UserCheck;
+      return <UserCheck className="size-3 text-[#0C356A]" />;
     default:
-      return ShieldCheck;
+      return <ShieldCheck className="size-3 text-[#0C356A]" />;
   }
-};
+}
 
 export default function RoundCard({
   round,
   onStartAttempt,
   onViewDetails,
 }: RoundCardProps) {
-  const Icon = getRoundIcon(round.type);
   const isCompleted = round.status === "completed";
 
   return (
@@ -59,7 +58,7 @@ export default function RoundCard({
               R{round.order}
             </div>
             <span className="inline-flex items-center gap-1.5 text-[11px] font-medium px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 capitalize border border-slate-200/60">
-              <Icon className="size-3 text-[#0C356A]" />
+              <RoundTypeIcon type={round.type} />
               {round.type.replace("_", " ")}
             </span>
           </div>

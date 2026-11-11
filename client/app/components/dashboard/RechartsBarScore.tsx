@@ -112,7 +112,7 @@ export default function RechartsBarScore({ interviews }: RechartsBarScoreProps) 
                 labelStyle={{
                   color: "#FFFFFF",
                 }}
-                formatter={(value: any) => [`${value}% Avg Score`, "Score"]}
+                formatter={(value) => [`${value ?? 0}% Avg Score`, "Score"]}
               />
               <Bar dataKey="avgScore" radius={[8, 8, 0, 0]}>
                 {chartData.map((_, index) => (

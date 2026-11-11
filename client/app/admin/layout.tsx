@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import AdminSidebar from "./AdminSidebar";
@@ -36,11 +36,11 @@ export default function AdminLayout({
   const dispatch = useAppDispatch();
   const isCollapsed = useAppSelector((state) => state.ui.isSidebarCollapsed);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
 
   const isAdminSession = status === "authenticated" && user?.portal === "admin";
 

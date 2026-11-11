@@ -14,7 +14,13 @@ import type { ApiEnvelope, ApiResult, AuthSession, PaginationMeta } from "./type
  * - Throws ApiRequestError (with stable code + field details) on failure
  */
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "/api/v1";
+function resolveApiBase(rawValue: string | undefined): string {
+  const cleaned = (rawValue ?? "").trim().replace(/\/+$/, "");
+  if (!cleaned) return "/api/v1";
+  return cleaned.endsWith("/api/v1") ? cleaned : `${cleaned}/api/v1`;
+}
+
+const API_BASE = resolveApiBase(process.env.NEXT_PUBLIC_API_BASE_URL);
 
 /** Endpoints that must not trigger the refresh-retry (they ARE the auth). */
 const NO_REFRESH_PATHS = new Set([

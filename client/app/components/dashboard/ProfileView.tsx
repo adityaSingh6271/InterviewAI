@@ -44,13 +44,15 @@ export default function ProfileView() {
     return Array.from(set);
   }, [interviews]);
 
-  const [skills, setSkills] = useState<string[]>([]);
+  const [addedSkills, setAddedSkills] = useState<string[]>([]);
+  const [removedSkills, setRemovedSkills] = useState<string[]>([]);
 
-  React.useEffect(() => {
-    if (extractedSkills.length > 0 && skills.length === 0) {
-      setSkills(extractedSkills);
-    }
-  }, [extractedSkills, skills.length]);
+  const skills = useMemo(() => {
+    const removed = new Set(removedSkills);
+    return Array.from(new Set([...extractedSkills, ...addedSkills])).filter(
+      (s) => !removed.has(s),
+    );
+  }, [extractedSkills, addedSkills, removedSkills]);
 
   const [newSkill, setNewSkill] = useState("");
   const [skillToDelete, setSkillToDelete] = useState<string | null>(null);
@@ -59,7 +61,8 @@ export default function ProfileView() {
     e.preventDefault();
     const trimmed = newSkill.trim();
     if (trimmed && !skills.includes(trimmed)) {
-      setSkills([...skills, trimmed]);
+      setRemovedSkills((prev) => prev.filter((s) => s !== trimmed));
+      setAddedSkills((prev) => (prev.includes(trimmed) ? prev : [...prev, trimmed]));
       toast.success(`Skill "${trimmed}" added to profile`);
       setNewSkill("");
     } else if (skills.includes(trimmed)) {
@@ -69,7 +72,10 @@ export default function ProfileView() {
 
   const handleConfirmRemoveSkill = () => {
     if (skillToDelete) {
-      setSkills(skills.filter((s) => s !== skillToDelete));
+      setRemovedSkills((prev) =>
+        prev.includes(skillToDelete) ? prev : [...prev, skillToDelete],
+      );
+      setAddedSkills((prev) => prev.filter((s) => s !== skillToDelete));
       toast.success(`Removed "${skillToDelete}" from skills`);
       setSkillToDelete(null);
     }
@@ -95,16 +101,7 @@ export default function ProfileView() {
       day: "numeric",
       year: "numeric",
     });
-  }, [user?.createdAt]);
-
-  const lastUpdated = useMemo(() => {
-    if (!user?.updatedAt) return null;
-    return new Date(user.updatedAt).toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
-  }, [user?.updatedAt]);
+  }, [user]);
 
   // Derive dynamic readiness score from user's interviews if available
   const readinessScore = useMemo(() => {

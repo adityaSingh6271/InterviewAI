@@ -57,7 +57,19 @@ export default function LlmConfigDialog({
   onSubmit,
 }: LlmConfigDialogProps) {
   const isCreate = config === null;
-  const [showAdvanced, setShowAdvanced] = useState(false);
+  const savedSettings = config?.settings as Record<string, unknown> | null | undefined;
+  const hasSavedAdvanced = Boolean(
+    savedSettings?.baseUrl ||
+      typeof savedSettings?.temperature === "number" ||
+      typeof savedSettings?.maxTokens === "number",
+  );
+  const sessionKey = `${open}:${config?.id ?? "new"}`;
+  const [advancedOverride, setAdvancedOverride] = useState<{
+    key: string;
+    open: boolean;
+  } | null>(null);
+  const showAdvanced =
+    advancedOverride?.key === sessionKey ? advancedOverride.open : hasSavedAdvanced;
 
   const {
     register,
@@ -81,15 +93,14 @@ export default function LlmConfigDialog({
     mode: "onTouched",
   });
 
+  const [watchedBaseUrl, watchedTemperature, watchedMaxTokens] = useWatch({
+    control,
+    name: ["baseUrl", "temperature", "maxTokens"],
+  });
+
   useEffect(() => {
     if (!open) return;
     const settings = config?.settings as Record<string, unknown> | null | undefined;
-    const hasAdvancedSettings = Boolean(
-      settings?.baseUrl ||
-        typeof settings?.temperature === "number" ||
-        typeof settings?.maxTokens === "number",
-    );
-    setShowAdvanced(hasAdvancedSettings);
 
     reset(
       isCreate
@@ -337,15 +348,17 @@ export default function LlmConfigDialog({
           <div className="rounded-lg border border-slate-200 overflow-hidden">
             <button
               type="button"
-              onClick={() => setShowAdvanced((prev) => !prev)}
+              onClick={() =>
+                setAdvancedOverride({ key: sessionKey, open: !showAdvanced })
+              }
               className="w-full flex items-center justify-between px-3.5 py-2.5 bg-slate-50/60 hover:bg-slate-100/60 transition-colors text-left text-xs font-semibold text-slate-700 cursor-pointer"
             >
               <span className="flex items-center gap-2">
                 <Sliders className="w-3.5 h-3.5 text-[#0C356A]" />
                 <span>Advanced Endpoint & Hyperparameters</span>
-                {(useWatch({ control, name: "baseUrl" }) ||
-                  useWatch({ control, name: "temperature" }) !== undefined ||
-                  useWatch({ control, name: "maxTokens" }) !== undefined) && (
+                {(watchedBaseUrl ||
+                  watchedTemperature !== undefined ||
+                  watchedMaxTokens !== undefined) && (
                   <Badge variant="soft" className="text-[10px] py-0 px-1.5 h-4">
                     Configured
                   </Badge>
