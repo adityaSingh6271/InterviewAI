@@ -34,11 +34,11 @@ export default function ExtractedJobInfo({
   return (
     <div className="bg-white dark:bg-[#1E1E2D] p-4 sm:p-5 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-2xs space-y-4">
       <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-        <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-lg bg-[#0C356A]/10 text-[#0C356A] dark:bg-blue-950/50 dark:text-blue-400">
+        <div className="flex items-start sm:items-center gap-2.5 min-w-0">
+          <div className="p-2 rounded-lg bg-[#0C356A]/10 text-[#0C356A] dark:bg-blue-950/50 dark:text-blue-400 shrink-0">
             <Sparkles className="size-4" />
           </div>
-          <div>
+          <div className="min-w-0">
             <h3 className="text-[14.5px] sm:text-base font-bold text-slate-900 dark:text-white">
               AI-Extracted Job Parameters
             </h3>

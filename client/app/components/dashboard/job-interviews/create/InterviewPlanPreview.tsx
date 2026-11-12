@@ -35,11 +35,11 @@ export default function InterviewPlanPreview({
   return (
     <div className="bg-white dark:bg-[#1E1E2D] p-4 sm:p-5 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-2xs space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
-        <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-lg bg-[#0C356A]/10 text-[#0C356A] dark:bg-blue-950/50 dark:text-blue-400">
+        <div className="flex items-start sm:items-center gap-2.5 min-w-0">
+          <div className="p-2 rounded-lg bg-[#0C356A]/10 text-[#0C356A] dark:bg-blue-950/50 dark:text-blue-400 shrink-0">
             <Layers className="size-4" />
           </div>
-          <div>
+          <div className="min-w-0">
             <h3 className="text-[14.5px] sm:text-base font-bold text-slate-900 dark:text-white">
               Generated Multi-Round Interview Plan ({rounds.length} Rounds)
             </h3>
@@ -49,7 +49,7 @@ export default function InterviewPlanPreview({
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2 shrink-0">
           <Clock className="size-4 text-slate-400" />
           <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">
             Default Session Length:
@@ -75,21 +75,21 @@ export default function InterviewPlanPreview({
               key={round.id || idx}
               className="p-3 sm:p-3.5 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-[#0C356A]/30 transition-colors"
             >
-              <div className="flex items-start gap-3">
+              <div className="flex items-start gap-3 min-w-0">
                 <div className="w-7 h-7 rounded-md bg-[#0C356A]/10 dark:bg-blue-950/80 text-[#0C356A] dark:text-blue-300 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
                   R{round.order}
                 </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h4 className="text-xs sm:text-[13.5px] font-bold text-slate-900 dark:text-white">
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                    <h4 className="text-xs sm:text-[13.5px] font-bold text-slate-900 dark:text-white leading-snug">
                       {round.title}
                     </h4>
-                    <span className="inline-flex items-center gap-1 text-[10.5px] font-semibold px-2 py-0.5 rounded-full bg-slate-200/70 dark:bg-slate-800 text-slate-700 dark:text-slate-300 capitalize">
+                    <span className="inline-flex items-center gap-1 text-[10.5px] font-semibold px-2 py-0.5 rounded-full bg-slate-200/70 dark:bg-slate-800 text-slate-700 dark:text-slate-300 capitalize shrink-0">
                       <Icon className="size-3" />
                       {round.type.replace("_", " ")}
                     </span>
                   </div>
-                  <p className="text-[11.5px] text-slate-500 dark:text-slate-400 mt-0.5 max-w-xl">
+                  <p className="text-[11.5px] text-slate-500 dark:text-slate-400 mt-1 max-w-xl leading-relaxed">
                     {round.description}
                   </p>
                 </div>

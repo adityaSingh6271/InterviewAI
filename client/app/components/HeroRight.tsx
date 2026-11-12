@@ -91,7 +91,7 @@ export default function HeroRight() {
       </div>
 
       {/* ── 3 Supporting Telemetry / Metric Cards ── */}
-      <div className="grid grid-cols-3 gap-3 sm:gap-3.5">
+      <div className="grid grid-cols-1 min-[480px]:grid-cols-3 gap-3 sm:gap-3.5">
         {/* Metric 1: Technical Depth */}
         <div className="bg-white rounded-xl p-3.5 sm:p-4 border border-slate-200/80 shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between mb-2">

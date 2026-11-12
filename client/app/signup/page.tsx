@@ -168,8 +168,8 @@ function SignupContent(props: SignupPageProps = {}) {
                 setAuthError(null);
               }}
               className={`flex items-center justify-center gap-2 py-2 px-3 rounded-xl text-xs sm:text-[13px] font-semibold transition-all cursor-pointer ${selectedPortal === "student"
-                  ? "bg-white text-indigo-600 shadow-xs border border-slate-200/70"
-                  : "text-slate-600 hover:text-slate-900"
+                ? "bg-white text-indigo-600 shadow-xs border border-slate-200/70"
+                : "text-slate-600 hover:text-slate-900"
                 }`}
             >
               <GraduationCap className="w-4 h-4 shrink-0" />
@@ -183,8 +183,8 @@ function SignupContent(props: SignupPageProps = {}) {
                 setAuthError(null);
               }}
               className={`flex items-center justify-center gap-2 py-2 px-3 rounded-xl text-xs sm:text-[13px] font-semibold transition-all cursor-pointer ${selectedPortal === "admin"
-                  ? "bg-white text-indigo-600 shadow-xs border border-slate-200/70"
-                  : "text-slate-600 hover:text-slate-900"
+                ? "bg-white text-indigo-600 shadow-xs border border-slate-200/70"
+                : "text-slate-600 hover:text-slate-900"
                 }`}
             >
               <Building2 className="w-4 h-4 shrink-0" />
@@ -221,8 +221,8 @@ function SignupContent(props: SignupPageProps = {}) {
                     autoComplete="name"
                     {...register("fullName")}
                     className={`w-full pl-9 pr-3 py-2 rounded-xl border text-sm text-slate-900 placeholder:text-slate-400 transition-all focus:outline-none focus:ring-2 ${errors.fullName
-                        ? "border-red-400 bg-red-50/30 focus:ring-red-200"
-                        : "border-slate-200 bg-slate-50/50 focus:border-[#4540DB] focus:bg-white focus:ring-indigo-500/20"
+                      ? "border-red-400 bg-red-50/30 focus:ring-red-200"
+                      : "border-slate-200 bg-slate-50/50 focus:border-[#4540DB] focus:bg-white focus:ring-indigo-500/20"
                       }`}
                   />
                 </div>
@@ -249,8 +249,8 @@ function SignupContent(props: SignupPageProps = {}) {
                     autoComplete="email"
                     {...register("email")}
                     className={`w-full pl-9 pr-3 py-2 rounded-xl border text-sm text-slate-900 placeholder:text-slate-400 transition-all focus:outline-none focus:ring-2 ${errors.email
-                        ? "border-red-400 bg-red-50/30 focus:ring-red-200"
-                        : "border-slate-200 bg-slate-50/50 focus:border-[#4540DB] focus:bg-white focus:ring-indigo-500/20"
+                      ? "border-red-400 bg-red-50/30 focus:ring-red-200"
+                      : "border-slate-200 bg-slate-50/50 focus:border-[#4540DB] focus:bg-white focus:ring-indigo-500/20"
                       }`}
                   />
                 </div>
@@ -280,8 +280,8 @@ function SignupContent(props: SignupPageProps = {}) {
                   autoComplete="off"
                   {...register("instituteCode")}
                   className={`w-full pl-9 pr-3 py-2 rounded-xl border text-sm font-mono uppercase text-slate-900 placeholder:text-slate-400 transition-all focus:outline-none focus:ring-2 ${errors.instituteCode
-                      ? "border-red-400 bg-red-50/30 focus:ring-red-200"
-                      : "border-slate-200 bg-slate-50/50 focus:border-[#4540DB] focus:bg-white focus:ring-indigo-500/20"
+                    ? "border-red-400 bg-red-50/30 focus:ring-red-200"
+                    : "border-slate-200 bg-slate-50/50 focus:border-[#4540DB] focus:bg-white focus:ring-indigo-500/20"
                     }`}
                 />
               </div>
@@ -312,8 +312,8 @@ function SignupContent(props: SignupPageProps = {}) {
                     autoComplete="new-password"
                     {...register("password")}
                     className={`w-full pl-9 pr-9 py-2 rounded-xl border text-sm text-slate-900 placeholder:text-slate-400 transition-all focus:outline-none focus:ring-2 ${errors.password
-                        ? "border-red-400 bg-red-50/30 focus:ring-red-200"
-                        : "border-slate-200 bg-slate-50/50 focus:border-[#4540DB] focus:bg-white focus:ring-indigo-500/20"
+                      ? "border-red-400 bg-red-50/30 focus:ring-red-200"
+                      : "border-slate-200 bg-slate-50/50 focus:border-[#4540DB] focus:bg-white focus:ring-indigo-500/20"
                       }`}
                   />
                   <button
@@ -347,8 +347,8 @@ function SignupContent(props: SignupPageProps = {}) {
                     autoComplete="new-password"
                     {...register("confirmPassword")}
                     className={`w-full pl-9 pr-9 py-2 rounded-xl border text-sm text-slate-900 placeholder:text-slate-400 transition-all focus:outline-none focus:ring-2 ${errors.confirmPassword
-                        ? "border-red-400 bg-red-50/30 focus:ring-red-200"
-                        : "border-slate-200 bg-slate-50/50 focus:border-[#4540DB] focus:bg-white focus:ring-indigo-500/20"
+                      ? "border-red-400 bg-red-50/30 focus:ring-red-200"
+                      : "border-slate-200 bg-slate-50/50 focus:border-[#4540DB] focus:bg-white focus:ring-indigo-500/20"
                       }`}
                   />
                   <button
@@ -388,10 +388,10 @@ function SignupContent(props: SignupPageProps = {}) {
                 <div className="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden">
                   <div
                     className={`h-full transition-all duration-300 ${passedCount < 3
-                        ? "bg-red-500 w-1/4"
-                        : passedCount < 5
-                          ? "bg-amber-500 w-3/4"
-                          : "bg-emerald-500 w-full"
+                      ? "bg-red-500 w-1/4"
+                      : passedCount < 5
+                        ? "bg-amber-500 w-3/4"
+                        : "bg-emerald-500 w-full"
                       }`}
                   />
                 </div>
@@ -448,7 +448,7 @@ function SignupContent(props: SignupPageProps = {}) {
               <p className="text-xs sm:text-[13px] text-slate-600 leading-relaxed">
                 Faculty, university dean, and enterprise accounts are provisioned directly by organization administrators to maintain private cohort segregation and RBAC security.
               </p>
-              <div className="pt-2 border-t border-indigo-100/80 text-xs text-slate-600 space-y-1">
+              {/* <div className="pt-2 border-t border-indigo-100/80 text-xs text-slate-600 space-y-1">
                 <div className="flex items-center justify-between">
                   <span>Demo Institute Admin:</span>
                   <span className="font-mono text-indigo-700 font-bold">demo@gmail.com</span>
@@ -457,7 +457,7 @@ function SignupContent(props: SignupPageProps = {}) {
                   <span>Demo Password:</span>
                   <span className="font-mono text-indigo-700 font-semibold">12345678</span>
                 </div>
-              </div>
+              </div> */}
             </div>
 
             <div className="flex flex-col gap-2.5">

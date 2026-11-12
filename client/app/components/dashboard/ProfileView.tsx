@@ -326,7 +326,7 @@ export default function ProfileView() {
               {targetCompanies.map((co, i) => (
                 <div
                   key={i}
-                  className="p-2.5 sm:p-3 rounded-lg bg-white border border-slate-200 flex items-center justify-between text-xs hover:border-slate-300 transition-colors shadow-2xs"
+                  className="p-2.5 sm:p-3 rounded-lg bg-white border border-slate-200 flex flex-wrap items-center justify-between gap-2 text-xs hover:border-slate-300 transition-colors shadow-2xs"
                 >
                   <div>
                     <div className="font-medium text-slate-900 text-[12.5px] sm:text-[13px]">
@@ -348,14 +348,14 @@ export default function ProfileView() {
         {/* Smart Resume Extracted Skills & Tags */}
         <div className="bg-white rounded-xl p-4 sm:p-6 border border-slate-200 shadow-xs hover:border-[#0C356A]/40 transition-all duration-200 flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <div className="flex items-center gap-2">
-                <Tag className="w-4 h-4 text-[#0C356A]" />
+            <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+              <div className="flex items-center gap-2 min-w-0">
+                <Tag className="w-4 h-4 text-[#0C356A] shrink-0" />
                 <h4 className="text-[14px] sm:text-[15px] font-semibold text-slate-900">
                   Parsed Skills & Topics
                 </h4>
               </div>
-              <span className="text-[11px] text-[#0C356A] font-medium bg-[#0C356A]/10 px-2 py-0.5 rounded-full border border-[#0C356A]/20">
+              <span className="text-[11px] text-[#0C356A] font-medium bg-[#0C356A]/10 px-2 py-0.5 rounded-full border border-[#0C356A]/20 shrink-0">
                 Resume Synced
               </span>
             </div>
@@ -390,16 +390,16 @@ export default function ProfileView() {
 
           <form
             onSubmit={handleAddSkill}
-            className="mt-5 pt-4 border-t border-slate-200 flex gap-2.5"
+            className="mt-5 pt-4 border-t border-slate-200 flex flex-col min-[380px]:flex-row gap-2.5"
           >
             <input
               type="text"
               value={newSkill}
               onChange={(e) => setNewSkill(e.target.value)}
               placeholder="Add skill or technology..."
-              className="flex-1 px-3.5 py-2 text-xs sm:text-[13px] rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-[#0C356A]/20 focus:border-[#0C356A]"
+              className="flex-1 min-w-0 px-3.5 py-2 text-xs sm:text-[13px] rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-[#0C356A]/20 focus:border-[#0C356A]"
             />
-            <IconButton type="submit" action="add" label="Add" size="default" />
+            <IconButton type="submit" action="add" label="Add" size="default" className="w-full min-[380px]:w-auto justify-center" />
           </form>
         </div>
       </div>

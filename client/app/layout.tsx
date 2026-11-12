@@ -8,7 +8,7 @@ import Providers from "./components/providers/Providers";
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-sans",
+  variable: "--font-poppins",
   display: "swap",
 });
 
@@ -48,7 +48,7 @@ export default async function RootLayout(props: {
               maxWidth: "480px",
               wordBreak: "break-word",
               overflowWrap: "anywhere",
-              fontFamily: "var(--font-sans, 'Poppins', sans-serif)",
+              fontFamily: "var(--font-poppins), 'Poppins', sans-serif",
             },
           }}
         />

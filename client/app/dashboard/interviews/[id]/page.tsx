@@ -33,7 +33,7 @@ export default function JobInterviewWorkspacePage(props: WorkspacePageProps = {}
   } = useJobInterview(id);
 
   // Role-aware UI: admin can manage any interview; student can edit their own
-  // draft and delete any interview they created.
+  // draft and delete any visible interview in their institute.
   const isOwnerStudent =
     user?.portal === "student" &&
     Boolean(interview?.createdBy && user?.id && interview.createdBy === user.id);
@@ -42,7 +42,7 @@ export default function JobInterviewWorkspacePage(props: WorkspacePageProps = {}
     user?.portal === "admin" ||
     (isOwnerStudent && interview?.status === "draft");
 
-  const canDelete = user?.portal === "admin" || isOwnerStudent;
+  const canDelete = user?.portal === "admin" || user?.portal === "student";
 
   const handleDeleteInterview = async () => {
     try {

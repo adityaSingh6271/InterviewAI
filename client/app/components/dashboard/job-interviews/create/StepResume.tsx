@@ -65,16 +65,16 @@ export default function StepResume({
   return (
     <div className="space-y-4 sm:space-y-5">
       {/* Header */}
-      <div className="bg-white p-5 sm:p-6 rounded-xl border border-slate-200 shadow-xs">
-        <div className="flex items-center gap-3">
-          <div className="p-2 rounded-lg bg-[#0C356A]/10 text-[#0C356A]">
+      <div className="bg-white p-4 sm:p-6 rounded-xl border border-slate-200 shadow-xs">
+        <div className="flex items-start sm:items-center gap-3">
+          <div className="p-2 rounded-lg bg-[#0C356A]/10 text-[#0C356A] shrink-0">
             <FileUp className="size-5" />
           </div>
-          <div>
+          <div className="min-w-0">
             <h2 className="text-base sm:text-lg font-bold text-slate-900">
               Step 2: Attach Candidate Resume (Recommended)
             </h2>
-            <p className="text-xs sm:text-[12.5px] text-slate-500">
+            <p className="text-xs sm:text-[12.5px] text-slate-500 mt-0.5 leading-relaxed">
               Comparing your resume to the job description enables AI to detect skill gaps, customize question difficulty, and highlight strengths.
             </p>
           </div>
@@ -84,7 +84,7 @@ export default function StepResume({
       {/* Main Upload / Paste Box */}
       <div className="bg-white dark:bg-[#1E1E2D] p-4 sm:p-5 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-2xs space-y-4">
         {/* Toggle between Upload & Paste */}
-        <div className="flex border-b border-slate-200 dark:border-slate-800 pb-2.5 gap-3">
+        <div className="flex flex-wrap border-b border-slate-200 dark:border-slate-800 pb-2.5 gap-x-4 gap-y-2">
           <button
             type="button"
             onClick={() => !isBusy && setTab("upload")}
@@ -163,11 +163,11 @@ export default function StepResume({
 
         {/* Active Selected Resume State */}
         {resumeRef && (
-          <div className="p-3.5 rounded-lg bg-emerald-50/60 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/60 flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
+          <div className="p-3.5 rounded-lg bg-emerald-50/60 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/60 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5 min-w-0">
               <CheckCircle2 className="size-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-              <div>
-                <p className="text-xs font-semibold text-emerald-950 dark:text-emerald-200">
+              <div className="min-w-0">
+                <p className="text-xs font-semibold text-emerald-950 dark:text-emerald-200 truncate">
                   {resumeRef.name}
                 </p>
                 <p className="text-[11px] text-emerald-700/80 dark:text-emerald-400">
@@ -183,18 +183,20 @@ export default function StepResume({
               variant="ghost"
               disabled={isBusy}
               onClick={() => setResumeRef(null)}
+              className="shrink-0"
             />
           </div>
         )}
 
         {/* Navigation buttons */}
-        <div className="flex items-center justify-between pt-4 border-t border-slate-200">
+        <div className="flex flex-col-reverse sm:flex-row sm:items-center justify-between gap-2.5 pt-4 border-t border-slate-200">
           <IconButton
             type="button"
             action="back"
             label="Back to Job Description"
             onClick={onBack}
             disabled={isBusy}
+            className="w-full sm:w-auto justify-center"
           />
 
           <IconButton
@@ -207,6 +209,7 @@ export default function StepResume({
             iconPosition="right"
             label={resumeRef ? "Run AI Analysis" : "Skip Resume & Analyze"}
             variant="default"
+            className="w-full sm:w-auto justify-center"
           />
         </div>
       </div>

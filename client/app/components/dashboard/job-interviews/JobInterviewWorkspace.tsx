@@ -237,7 +237,7 @@ export default function JobInterviewWorkspace({
     <div className="w-full pb-20 relative">
 
       {/* ── TOP BACK NAVIGATION + EDIT ACTION ── */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
         <Link
           href="/dashboard/interviews"
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-800 transition-colors group"
@@ -527,7 +527,7 @@ export default function JobInterviewWorkspace({
 
         <SheetContent
           side="right"
-          className="sm:min-w-3xl w-full p-0 flex flex-col gap-0 overflow-hidden bg-white dark:bg-[#1E1E2D] border-l border-slate-200 dark:border-slate-800 shadow-2xl"
+          className="sm:max-w-xl md:max-w-2xl w-full p-0 flex flex-col gap-0 overflow-hidden bg-white dark:bg-[#1E1E2D] border-l border-slate-200 dark:border-slate-800 shadow-2xl"
         >
           <SheetHeader className="p-4 sm:p-5 border-b border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/50">
             <div className="flex items-center gap-2.5">

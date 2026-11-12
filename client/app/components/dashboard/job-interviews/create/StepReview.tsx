@@ -48,15 +48,15 @@ export default function StepReview({
   return (
     <div className="space-y-4 sm:space-y-5">
       <div className="bg-white dark:bg-[#1E1E2D] p-4 sm:p-5 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-2xs">
-        <div className="flex items-center gap-3 mb-1.5">
-          <div className="p-2 rounded-lg bg-[#0C356A]/10 text-[#0C356A] dark:bg-blue-950/50 dark:text-blue-400">
+        <div className="flex items-start sm:items-center gap-3 mb-1.5">
+          <div className="p-2 rounded-lg bg-[#0C356A]/10 text-[#0C356A] dark:bg-blue-950/50 dark:text-blue-400 shrink-0">
             <Rocket className="size-5" />
           </div>
-          <div>
+          <div className="min-w-0">
             <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
               Step 4: Review & Initialize Interview Workspace
             </h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 leading-relaxed">
               Verify all configured parameters. Creating the workspace will set
               up simulation rounds, prep notes, and progress analytics.
             </p>
@@ -146,14 +146,14 @@ export default function StepReview({
           {generatedRounds.map((round, idx) => (
             <div
               key={idx}
-              className="py-2.5 sm:py-3 flex items-center justify-between"
+              className="py-2.5 sm:py-3 flex flex-col min-[420px]:flex-row min-[420px]:items-center justify-between gap-2"
             >
-              <div className="flex items-center gap-3">
-                <div className="w-6 h-6 rounded-md bg-[#0C356A]/10 dark:bg-blue-950/60 text-[#0C356A] dark:text-blue-300 flex items-center justify-center text-xs font-bold">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-6 h-6 rounded-md bg-[#0C356A]/10 dark:bg-blue-950/60 text-[#0C356A] dark:text-blue-300 flex items-center justify-center text-xs font-bold shrink-0">
                   {idx + 1}
                 </div>
-                <div>
-                  <p className="text-xs sm:text-[13px] font-semibold text-slate-900 dark:text-white">
+                <div className="min-w-0">
+                  <p className="text-xs sm:text-[13px] font-semibold text-slate-900 dark:text-white leading-snug">
                     {round.title}
                   </p>
                   <p className="text-[11px] text-slate-400 capitalize">
@@ -162,7 +162,7 @@ export default function StepReview({
                   </p>
                 </div>
               </div>
-              <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2.5 py-0.5 rounded-md">
+              <span className="self-start min-[420px]:self-center shrink-0 text-[11px] font-medium text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2.5 py-0.5 rounded-md whitespace-nowrap">
                 Yet to Start
               </span>
             </div>
@@ -171,13 +171,14 @@ export default function StepReview({
       </div>
 
       {/* Actions */}
-      <div className="flex items-center justify-between p-4 sm:p-5 bg-white dark:bg-[#1E1E2D] rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-2xs">
+      <div className="flex flex-col-reverse sm:flex-row sm:items-center justify-between gap-2.5 p-4 sm:p-5 bg-white dark:bg-[#1E1E2D] rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-2xs">
         <IconButton
           type="button"
           action="back"
           label="Back to Analysis"
           onClick={onBack}
           disabled={isCreating}
+          className="w-full sm:w-auto justify-center"
         />
 
         <IconButton
@@ -189,6 +190,7 @@ export default function StepReview({
           icon={<Sparkles className="size-4" />}
           label="Initialize Job Interview Workspace"
           variant="default"
+          className="w-full sm:w-auto justify-center whitespace-normal text-center"
         />
       </div>
     </div>

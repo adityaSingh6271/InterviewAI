@@ -68,7 +68,7 @@ export default function WorkspaceOverview({
 
           {/* Quick Launch Next Pending Round */}
           {nextPendingRound ? (
-            <div className="flex items-center gap-3 p-3 rounded-lg bg-blue-50/70 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-900/40 shrink-0">
+            <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 p-3 rounded-lg bg-blue-50/70 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-900/40 shrink-0 w-full sm:w-auto">
               <div className="min-w-0">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 block">
                   Next Recommended Milestone
@@ -113,7 +113,7 @@ export default function WorkspaceOverview({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
+          <div className="grid grid-cols-1 min-[360px]:grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
             <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 text-center">
               <span className="text-lg font-bold text-slate-900 dark:text-white block leading-tight">
                 {completedRounds.length} / {interview.rounds.length}
@@ -154,7 +154,7 @@ export default function WorkspaceOverview({
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Left 2 cols: Diagnostic Score Breakdown */}
         <div className="lg:col-span-2 bg-white dark:bg-[#1E1E2D] p-5 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-2xs space-y-4">
-          <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+          <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-slate-100 dark:border-slate-800">
             <div className="flex items-center gap-2">
               <BarChart3 className="size-4 text-blue-600 dark:text-blue-400" />
               <h4 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
@@ -173,7 +173,7 @@ export default function WorkspaceOverview({
 
               return (
                 <div key={round.id} className="space-y-1">
-                  <div className="flex items-center justify-between text-xs">
+                  <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
                     <span className="font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
                       <span className="w-5 h-5 rounded-full bg-slate-100 dark:bg-slate-800 text-[10.5px] font-bold text-slate-600 dark:text-slate-400 flex items-center justify-center">
                         {round.order}
@@ -274,7 +274,7 @@ export default function WorkspaceOverview({
 
       {/* ── 3. AI Examiner Simulation Feedback History ── */}
       <div className="bg-white dark:bg-[#1E1E2D] p-5 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-2xs space-y-3.5">
-        <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+        <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-slate-100 dark:border-slate-800">
           <div className="flex items-center gap-2">
             <Award className="size-4 text-blue-600 dark:text-blue-400" />
             <h4 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">

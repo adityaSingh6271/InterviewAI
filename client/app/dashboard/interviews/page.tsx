@@ -35,7 +35,7 @@ export default function InterviewsPage(props: PageProps = {}) {
 
   // Role-aware UI: creating is open to both portals (the service pins
   // students to their own institute); admins manage all institute rows, while
-  // students may edit their own drafts and delete any interview they created.
+  // students may edit their own drafts and delete any visible interview.
   const canManage = user?.portal === "admin";
   const canCreate = Boolean(user);
   const canEditItem = (item: JobInterview) =>
@@ -43,10 +43,7 @@ export default function InterviewsPage(props: PageProps = {}) {
     (user?.portal === "student" &&
       item.status === "draft" &&
       Boolean(item.createdBy && user?.id && item.createdBy === user.id));
-  const canDeleteItem = (item: JobInterview) =>
-    canManage ||
-    (user?.portal === "student" &&
-      Boolean(item.createdBy && user?.id && item.createdBy === user.id));
+  const canDeleteItem = () => canManage || user?.portal === "student";
 
   return (
     <div className="w-full">

@@ -47,15 +47,18 @@ export default function CreateJobInterviewPage(props: PageProps = {}) {
     setExperienceLevel,
     sessionDurationMinutes,
     setSessionDurationMinutes,
+    isSavingStep,
     isCreating,
     createFinalInterview,
   } = useJobInterviewCreation();
 
+  const isBusy = isSavingStep || isAnalyzing || isCreating;
+
   return (
-    <div className="w-full space-y-6 pb-16">
+    <div className="w-full space-y-5 sm:space-y-6 pb-16">
       {/* Top Header & Breadcrumb */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
+        <div className="min-w-0">
           <Link
             href="/dashboard/interviews"
             className="inline-flex items-center gap-2 text-xs font-medium text-slate-500 hover:text-slate-800 mb-2 transition-colors"
@@ -63,22 +66,22 @@ export default function CreateJobInterviewPage(props: PageProps = {}) {
             <ArrowLeft className="size-3.5" />
             Back to Interviews
           </Link>
-          <h1 className="text-2xl sm:text-[26px] font-semibold text-slate-900 flex items-center gap-2.5 tracking-tight">
-            Create Job Interview
-            <span className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 flex items-center gap-1">
+          <h1 className="text-xl min-[380px]:text-2xl sm:text-[26px] font-semibold text-slate-900 flex flex-wrap items-center gap-2 sm:gap-2.5 tracking-tight leading-tight">
+            <span>Create Job Interview</span>
+            <span className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 inline-flex items-center gap-1 shrink-0">
               <Sparkles className="size-3" />
               AI Powered
             </span>
           </h1>
-          <p className="text-xs sm:text-[13px] text-slate-500 font-normal mt-0.5">
+          <p className="text-xs sm:text-[13px] text-slate-500 font-normal mt-1">
             Build a comprehensive simulation curriculum tailored directly to any role&apos;s actual requirements.
           </p>
         </div>
       </div>
 
       {/* Step Progress Stepper */}
-      <div className="bg-white dark:bg-[#1E1E2D] p-3 sm:p-3.5 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-2xs">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+      <div className="bg-white dark:bg-[#1E1E2D] p-2.5 sm:p-3.5 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-2xs">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-2.5">
           {WIZARD_STEPS.map((s) => {
             const isDone = currentStep > s.step;
             const isCurrent = currentStep === s.step;
@@ -87,13 +90,13 @@ export default function CreateJobInterviewPage(props: PageProps = {}) {
               <div
                 key={s.step}
                 onClick={() => {
-                  if (s.step < currentStep) goToStep(s.step as 1 | 2 | 3 | 4);
+                  if (!isBusy && s.step < currentStep) goToStep(s.step as 1 | 2 | 3 | 4);
                 }}
-                className={`flex items-center gap-2.5 p-2 sm:p-2.5 rounded-lg border transition-all ${
+                className={`flex items-center gap-2 sm:gap-2.5 p-2 sm:p-2.5 rounded-lg border transition-all ${
                   isCurrent
                     ? "bg-[#0C356A]/10 dark:bg-[#0C356A]/30 border-[#0C356A]/30 dark:border-[#0C356A]/50"
                     : isDone
-                    ? "cursor-pointer hover:bg-[#F1F6FD] hover:border-[#B8C7DA] dark:hover:bg-slate-800/40 border-slate-200/80 dark:border-slate-800"
+                    ? `${isBusy ? "opacity-75 cursor-not-allowed" : "cursor-pointer hover:bg-[#F1F6FD] hover:border-[#B8C7DA] dark:hover:bg-slate-800/40"} border-slate-200/80 dark:border-slate-800`
                     : "opacity-60 border-slate-100 dark:border-slate-800"
                 }`}
               >
@@ -110,7 +113,7 @@ export default function CreateJobInterviewPage(props: PageProps = {}) {
                 </div>
                 <div className="min-w-0">
                   <p
-                    className={`text-xs font-semibold truncate ${
+                    className={`text-[11px] sm:text-xs font-semibold leading-tight wrap-break-word ${
                       isCurrent
                         ? "text-[#0C356A] dark:text-blue-200 font-bold"
                         : "text-slate-800 dark:text-slate-200"
@@ -135,6 +138,7 @@ export default function CreateJobInterviewPage(props: PageProps = {}) {
             jobDescription={jobDescription}
             setJobDescription={setJobDescription}
             onNext={() => goToStep(2)}
+            isLoading={isSavingStep}
           />
         )}
 
@@ -144,13 +148,14 @@ export default function CreateJobInterviewPage(props: PageProps = {}) {
             setResumeRef={setResumeRef}
             onNext={() => goToStep(3)}
             onBack={() => goToStep(1)}
-            isAnalyzing={isAnalyzing}
+            isAnalyzing={isAnalyzing || isSavingStep}
           />
         )}
 
         {currentStep === 3 && (
           <StepAnalysis
-            isAnalyzing={isAnalyzing}
+            isAnalyzing={isAnalyzing || (!extractedData && isSavingStep)}
+            isProceeding={isSavingStep}
             analysisPhase={analysisPhase}
             extractedData={extractedData}
             matchAnalysis={matchAnalysis}

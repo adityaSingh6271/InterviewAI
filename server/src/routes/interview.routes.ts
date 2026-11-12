@@ -28,8 +28,8 @@ import { listQuery } from "../validations/common.validation";
  * open to both portals; the service pins students to their own institute.
  * PATCH is open to both portals too: the service enforces ownership (a
  * student may only edit/publish a draft they created; everything else is
- * admin-only). DELETE is open to admins (in scope) and to students for
- * interviews they created (`createdBy === actor.id`). Nested sub-resource
+ * admin-only). DELETE is open to admins (in scope) and to students for any
+ * interview visible in their institute scope. Nested sub-resource
  * lists are wired here so `/interviews/:id/rounds` and
  * `/interviews/:id/applications` live with their parent.
  *

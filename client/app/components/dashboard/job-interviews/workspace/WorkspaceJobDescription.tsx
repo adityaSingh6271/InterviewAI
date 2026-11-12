@@ -36,7 +36,7 @@ export default function WorkspaceJobDescription({
       {/* Target Competencies & Tech Stack */}
       {uniqueSkills.length > 0 && (
         <div className="bg-white dark:bg-[#1E1E2D] p-4 sm:p-5 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-2xs space-y-2.5">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <h4 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
               Target Competencies & Tech Stack
             </h4>
@@ -61,7 +61,7 @@ export default function WorkspaceJobDescription({
       {/* Role Summary & Job Description */}
       {cleanDescription && (
         <div className="bg-white dark:bg-[#1E1E2D] p-4 sm:p-5 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-2xs space-y-3">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <h4 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
               Role Requirements & Responsibilities
             </h4>

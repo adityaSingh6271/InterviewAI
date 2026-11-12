@@ -37,20 +37,20 @@ export default function AnalysisProgress({ currentPhaseText }: AnalysisProgressP
   }, [derivedStepIndex]);
 
   return (
-    <div className="flex flex-col items-center justify-center p-8 md:p-12 text-center bg-white rounded-2xl border border-slate-200 shadow-xs animate-in fade-in duration-200">
-      <div className="relative mb-6">
-        <div className="w-16 h-16 rounded-2xl bg-[#0C356A]/10 flex items-center justify-center text-[#0C356A]">
-          <Sparkles className="size-8 animate-pulse" />
+    <div className="flex flex-col items-center justify-center p-5 sm:p-8 md:p-12 text-center bg-white rounded-2xl border border-slate-200 shadow-xs animate-in fade-in duration-200">
+      <div className="relative mb-5 sm:mb-6">
+        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#0C356A]/10 flex items-center justify-center text-[#0C356A]">
+          <Sparkles className="size-7 sm:size-8 animate-pulse" />
         </div>
         <div className="absolute -top-1 -right-1">
           <Loader2 className="size-5 text-[#0C356A] animate-spin" />
         </div>
       </div>
 
-      <h3 className="text-xl font-bold text-slate-900 mb-2">
+      <h3 className="text-lg sm:text-xl font-bold text-slate-900 mb-2">
         AI Intelligence Engine at Work
       </h3>
-      <p className="text-xs sm:text-[13px] text-slate-500 max-w-md mb-8">
+      <p className="text-xs sm:text-[13px] text-slate-500 max-w-md mb-6 sm:mb-8">
         {currentPhaseText || "Analyzing role specifics and tailoring custom interview simulation parameters..."}
       </p>
 

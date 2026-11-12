@@ -17,6 +17,8 @@ import {
   Play,
   SkipForward,
   Pause,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 import IconButton from "@/components/common/icon-button";
 import { attemptsApi, type ServerResponse } from "@/lib/api/attempts";
@@ -78,6 +80,7 @@ export default function AttemptModal({
   const [speakingSeconds, setSpeakingSeconds] = useState(0);
   const [isSavingAnswer, setIsSavingAnswer] = useState(false);
   const [isTranscribing, setIsTranscribing] = useState(false);
+  const [isTurnDockCollapsed, setIsTurnDockCollapsed] = useState(false);
   const [result, setResult] = useState<{
     score: number | null;
     responses: ServerResponse[];
@@ -408,10 +411,10 @@ export default function AttemptModal({
   const canCompleteTurn = Boolean(inputText.trim() || hasRecordedAudio);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="w-full max-w-5xl xl:max-w-6xl bg-white dark:bg-[#1E1E2D] rounded-2xl shadow-2xl border border-slate-200/80 dark:border-slate-800 overflow-hidden flex flex-col max-h-[95vh] h-full sm:h-[88vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200">
+      <div className="w-full max-w-5xl xl:max-w-6xl bg-white dark:bg-[#1E1E2D] rounded-none sm:rounded-2xl shadow-2xl border-0 sm:border border-slate-200/80 dark:border-slate-800 overflow-hidden flex flex-col h-[100dvh] sm:h-[90dvh] sm:max-h-[92vh]">
         {/* Top Header Bar */}
-        <div className="px-4 sm:px-6 py-3.5 bg-slate-900 text-white flex items-center justify-between shrink-0">
+        <div className="px-3.5 sm:px-6 py-2.5 sm:py-3.5 bg-slate-900 text-white flex items-center justify-between gap-2 shrink-0">
           <div className="flex items-center gap-3 min-w-0">
             <span className="relative flex h-3 w-3 shrink-0">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
@@ -477,9 +480,9 @@ export default function AttemptModal({
 
         {/* Active Phase: Split-View Workspace */}
         {phase !== "loading" && phase !== "result" && (
-          <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 overflow-hidden min-h-0">
+          <div className="flex-1 flex flex-col lg:grid lg:grid-cols-12 overflow-hidden min-h-0">
             {/* Left Column: Camera, Eye, Face & Movement Proctoring HUD */}
-            <div className="lg:col-span-5 p-3 sm:p-4 bg-slate-950 flex flex-col border-b lg:border-b-0 lg:border-r border-slate-800 overflow-hidden shrink-0">
+            <div className="lg:col-span-5 p-2 sm:p-3 lg:p-4 bg-slate-950 flex flex-col border-b lg:border-b-0 lg:border-r border-slate-800 shrink-0 lg:overflow-hidden">
               <AiProctoringView
                 videoRef={videoRef}
                 canvasRef={canvasRef}
@@ -508,25 +511,25 @@ export default function AttemptModal({
             </div>
 
             {/* Right Column: AI Conversation Stream & Smooth Turn Controls */}
-            <div className="lg:col-span-7 flex flex-col bg-slate-50/50 dark:bg-slate-900/30 overflow-hidden min-h-0">
+            <div className="flex-1 lg:col-span-7 flex flex-col bg-slate-50/50 dark:bg-slate-900/30 overflow-hidden min-h-0">
               {/* Dialogue Transcript Stream */}
-              <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
+              <div className="flex-1 min-h-0 overflow-y-auto p-3 sm:p-5 space-y-3 sm:space-y-4">
                 {messages.map((msg, idx) => {
                   const isAi = msg.sender === "ai";
                   return (
                     <div
                       key={idx}
-                      className={`flex items-start gap-3 ${
+                      className={`flex items-start gap-2.5 sm:gap-3 ${
                         isAi ? "justify-start" : "justify-end"
                       }`}
                     >
                       {isAi && (
-                        <div className="w-8 h-8 rounded-xl bg-[#0C356A] text-white flex items-center justify-center shrink-0 shadow-sm mt-0.5">
-                          <Bot className="size-4" />
+                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-[#0C356A] text-white flex items-center justify-center shrink-0 shadow-sm mt-0.5">
+                          <Bot className="size-3.5 sm:size-4" />
                         </div>
                       )}
                       <div
-                        className={`max-w-xl p-3.5 sm:p-4 rounded-2xl text-xs sm:text-sm leading-relaxed ${
+                        className={`max-w-[85%] sm:max-w-xl p-3 sm:p-4 rounded-2xl text-xs sm:text-sm leading-relaxed wrap-break-word ${
                           isAi
                             ? "bg-white dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 shadow-xs"
                             : "bg-[#0C356A] text-white font-medium ml-auto"
@@ -542,8 +545,8 @@ export default function AttemptModal({
                         </span>
                       </div>
                       {!isAi && (
-                        <div className="w-8 h-8 rounded-xl bg-slate-800 text-white flex items-center justify-center shrink-0 shadow-sm mt-0.5">
-                          <User className="size-4" />
+                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-slate-800 text-white flex items-center justify-center shrink-0 shadow-sm mt-0.5">
+                          <User className="size-3.5 sm:size-4" />
                         </div>
                       )}
                     </div>
@@ -560,268 +563,359 @@ export default function AttemptModal({
               </div>
 
               {/* Conversational Turn Control Dock & Transcript Composer */}
-              <div className="p-3.5 sm:p-4 bg-white dark:bg-[#1E1E2D] border-t border-slate-200 dark:border-slate-800 space-y-3 shrink-0">
-                {/* Interactive Turn Banner */}
-                {phase === "active" && turnStage === "ai_speaking" && (
-                  <div className="flex flex-wrap items-center justify-between gap-2.5 p-2.5 sm:px-3.5 rounded-xl bg-blue-50/90 dark:bg-blue-950/40 border border-blue-200/80 dark:border-blue-800/60 animate-in fade-in">
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <span className="w-8 h-8 rounded-lg bg-[#0C356A] text-white flex items-center justify-center shrink-0">
-                        <Volume2 className="size-4 animate-pulse" />
-                      </span>
-                      <div className="min-w-0">
-                        <p className="text-xs font-semibold text-[#0C356A] dark:text-blue-300">
-                          AI Interviewer is speaking Question {questionIndex + 1} of{" "}
-                          {questions.length}
-                        </p>
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                          Listen carefully — your turn controls unlock automatically when finished.
-                        </p>
-                      </div>
-                    </div>
+              <div className="bg-white dark:bg-[#1E1E2D] border-t border-slate-200 dark:border-slate-800 shrink-0">
+                {/* Dock Toggle & Quick Action Strip (allows collapsing "Your Turn" to read long AI questions) */}
+                <div className="px-3 sm:px-4 py-1.5 sm:py-2 bg-slate-50/90 dark:bg-slate-900/60 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-2 py-0.5 rounded-full whitespace-nowrap">
+                      Q {Math.min(questionIndex + 1, questions.length)}/{questions.length}
+                    </span>
+                    <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400 truncate">
+                      {phase !== "active"
+                        ? "Evaluating Round..."
+                        : turnStage === "ai_speaking"
+                          ? "AI speaking question"
+                          : turnStage === "ready_to_speak"
+                            ? "Your turn to speak"
+                            : turnStage === "user_speaking"
+                              ? `${formatTimer(speakingSeconds)} • ${wordCount}w recording`
+                              : turnStage === "reviewing"
+                                ? "Draft answer ready"
+                                : "Round completed"}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    {isTurnDockCollapsed && phase === "active" && (
+                      <>
+                        {turnStage === "ai_speaking" && (
+                          <button
+                            type="button"
+                            onClick={handleSkipAiVoice}
+                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#0C356A] text-white text-[11px] font-semibold cursor-pointer"
+                          >
+                            <SkipForward className="size-3" />
+                            Skip
+                          </button>
+                        )}
+                        {turnStage === "ready_to_speak" && (
+                          <button
+                            type="button"
+                            onClick={handleStartSpeaking}
+                            disabled={isSavingAnswer}
+                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-semibold cursor-pointer"
+                          >
+                            <Play className="size-3 fill-current" />
+                            Speak
+                          </button>
+                        )}
+                        {turnStage === "user_speaking" && (
+                          <button
+                            type="button"
+                            onClick={() =>
+                              void submitCurrentAnswer({ allowEmptyAsNotAnswered: true })
+                            }
+                            disabled={isTurnBusy || !canCompleteTurn}
+                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#0C356A] text-white text-[11px] font-semibold disabled:opacity-50 cursor-pointer"
+                          >
+                            <CheckCircle2 className="size-3" />
+                            Done
+                          </button>
+                        )}
+                        {turnStage === "reviewing" && (
+                          <button
+                            type="button"
+                            onClick={() =>
+                              void submitCurrentAnswer({ allowEmptyAsNotAnswered: true })
+                            }
+                            disabled={isTurnBusy || !canCompleteTurn}
+                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#0C356A] text-white text-[11px] font-semibold disabled:opacity-50 cursor-pointer"
+                          >
+                            <CheckCircle2 className="size-3" />
+                            Submit
+                          </button>
+                        )}
+                      </>
+                    )}
+
                     <button
                       type="button"
-                      onClick={handleSkipAiVoice}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 border border-blue-200 dark:border-slate-700 text-xs font-semibold text-[#0C356A] dark:text-blue-300 hover:bg-blue-100/70 transition-colors cursor-pointer shrink-0"
+                      onClick={() => setIsTurnDockCollapsed((prev) => !prev)}
+                      aria-expanded={!isTurnDockCollapsed}
+                      aria-label={
+                        isTurnDockCollapsed
+                          ? "Show turn controls and answer input"
+                          : "Minimize turn controls to view question"
+                      }
+                      className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-[11px] font-semibold text-slate-600 dark:text-slate-300 cursor-pointer transition-colors"
                     >
-                      <SkipForward className="size-3.5" />
-                      Skip &amp; Answer Now
+                      <span>{isTurnDockCollapsed ? "Answer" : "Hide"}</span>
+                      {isTurnDockCollapsed ? (
+                        <ChevronUp className="size-3.5" />
+                      ) : (
+                        <ChevronDown className="size-3.5" />
+                      )}
                     </button>
                   </div>
-                )}
+                </div>
 
-                {phase === "active" && turnStage === "ready_to_speak" && (
-                  <div className="flex flex-wrap items-center justify-between gap-2.5 p-3 rounded-xl bg-emerald-50/90 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/60 animate-in fade-in">
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <span className="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-xs">
-                        <Mic className="size-4" />
-                      </span>
-                      <div className="min-w-0">
-                        <p className="text-xs font-bold text-emerald-900 dark:text-emerald-300">
-                          Your Turn to Speak
-                        </p>
-                        <p className="text-[11px] text-emerald-700/80 dark:text-emerald-400/80">
-                          AI finished the question. Click below when you&apos;re ready to start speaking, or type your response.
-                        </p>
+                {!isTurnDockCollapsed && (
+                  <div className="p-2.5 sm:p-3.5 space-y-2 sm:space-y-2.5">
+                    {/* Interactive Turn Banner */}
+                    {phase === "active" && turnStage === "ai_speaking" && (
+                      <div className="flex flex-wrap items-center justify-between gap-2 p-2 sm:px-3.5 sm:py-2.5 rounded-xl bg-blue-50/90 dark:bg-blue-950/40 border border-blue-200/80 dark:border-blue-800/60 animate-in fade-in">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#0C356A] text-white flex items-center justify-center shrink-0">
+                            <Volume2 className="size-3.5 sm:size-4 animate-pulse" />
+                          </span>
+                          <div className="min-w-0">
+                            <p className="text-xs font-semibold text-[#0C356A] dark:text-blue-300">
+                              AI Interviewer is speaking
+                            </p>
+                            <p className="hidden sm:block text-[11px] text-slate-500 dark:text-slate-400">
+                              Listen carefully — your turn controls unlock automatically when finished.
+                            </p>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={handleSkipAiVoice}
+                          className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 border border-blue-200 dark:border-slate-700 text-xs font-semibold text-[#0C356A] dark:text-blue-300 hover:bg-blue-100/70 transition-colors cursor-pointer shrink-0"
+                        >
+                          <SkipForward className="size-3.5" />
+                          Skip &amp; Answer
+                        </button>
                       </div>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={handleStartSpeaking}
-                      disabled={isSavingAnswer}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-xs font-semibold shadow-sm transition-all cursor-pointer shrink-0"
-                    >
-                      <Play className="size-3.5 fill-current" />
-                      Start Speaking Answer
-                    </button>
-                  </div>
-                )}
+                    )}
 
-                {phase === "active" && turnStage === "user_speaking" && (
-                  <div className="flex flex-wrap items-center justify-between gap-2.5 p-3 rounded-xl bg-rose-50/90 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-800/60 animate-in fade-in">
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <span className="relative flex h-8 w-8 items-center justify-center rounded-lg bg-rose-600 text-white shrink-0">
-                        <Mic className="size-4" />
-                        <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75" />
-                          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-300" />
-                        </span>
-                      </span>
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-2">
-                          <p className="text-xs font-bold text-rose-900 dark:text-rose-200">
-                            {speechSupported ? "Listening to Your Answer" : "Voice Recording Active"}
-                          </p>
-                          <span className="text-[11px] font-mono px-1.5 py-0.5 rounded bg-rose-100 dark:bg-rose-900/50 text-rose-700 dark:text-rose-200">
-                            {formatTimer(speakingSeconds)} &middot; {wordCount} words
+                    {phase === "active" && turnStage === "ready_to_speak" && (
+                      <div className="flex flex-wrap items-center justify-between gap-2 p-2 sm:p-3 rounded-xl bg-emerald-50/90 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/60 animate-in fade-in">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+                            <Mic className="size-3.5 sm:size-4" />
+                          </span>
+                          <div className="min-w-0">
+                            <p className="text-xs font-bold text-emerald-900 dark:text-emerald-300">
+                              Your Turn to Speak
+                            </p>
+                            <p className="hidden sm:block text-[11px] text-emerald-700/80 dark:text-emerald-400/80">
+                              AI finished the question. Click below when you&apos;re ready to start speaking, or type your response.
+                            </p>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={handleStartSpeaking}
+                          disabled={isSavingAnswer}
+                          className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-xs font-semibold shadow-sm transition-all cursor-pointer shrink-0"
+                        >
+                          <Play className="size-3.5 fill-current" />
+                          Start Speaking Answer
+                        </button>
+                      </div>
+                    )}
+
+                    {phase === "active" && turnStage === "user_speaking" && (
+                      <div className="flex flex-wrap items-center justify-between gap-2 p-2 sm:p-3 rounded-xl bg-rose-50/90 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-800/60 animate-in fade-in">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <span className="relative flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-lg bg-rose-600 text-white shrink-0">
+                            <Mic className="size-3.5 sm:size-4" />
+                            <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75" />
+                              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-300" />
+                            </span>
+                          </span>
+                          <div className="min-w-0">
+                            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                              <p className="text-xs font-bold text-rose-900 dark:text-rose-200">
+                                {speechSupported ? "Listening" : "Recording"}
+                              </p>
+                              <span className="text-[11px] font-mono px-1.5 py-0.5 rounded bg-rose-100 dark:bg-rose-900/50 text-rose-700 dark:text-rose-200">
+                                {formatTimer(speakingSeconds)} &middot; {wordCount}w
+                              </span>
+                            </div>
+                            <p className="hidden sm:block text-[11px] text-rose-700/80 dark:text-rose-300/80">
+                              {speechNotice ||
+                                "Speak naturally — click when you finish explaining your answer."}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 shrink-0">
+                          <button
+                            type="button"
+                            onClick={() => void handlePauseSpeaking()}
+                            disabled={isTurnBusy}
+                            className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 transition-colors cursor-pointer"
+                          >
+                            <Pause className="size-3.5" />
+                            Pause
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() =>
+                              void submitCurrentAnswer({ allowEmptyAsNotAnswered: true })
+                            }
+                            disabled={isTurnBusy || !canCompleteTurn}
+                            className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl bg-[#0C356A] hover:bg-blue-900 disabled:opacity-50 text-white text-xs font-semibold shadow-sm transition-all cursor-pointer"
+                          >
+                            <CheckCircle2 className="size-3.5" />
+                            {isTranscribing
+                              ? "Transcribing..."
+                              : isSavingAnswer
+                                ? "Saving..."
+                                : "Completed"}
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
+                    {phase === "active" && turnStage === "reviewing" && (
+                      <div className="flex flex-wrap items-center justify-between gap-2 p-2 sm:px-3.5 sm:py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 animate-in fade-in">
+                        <div className="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-200 min-w-0">
+                          <Square className="size-3.5 text-slate-500 shrink-0" />
+                          <span className="font-medium truncate sm:whitespace-normal">
+                            {isTranscribing
+                              ? "Transcribing spoken answer..."
+                              : canCompleteTurn
+                                ? "Review draft or submit answer."
+                                : "Speak or type below to answer."}
                           </span>
                         </div>
-                        <p className="text-[11px] text-rose-700/80 dark:text-rose-300/80">
-                          {speechNotice ||
-                            "Speak naturally — click when you finish explaining your answer."}
-                        </p>
+                        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                          <button
+                            type="button"
+                            onClick={handleStartSpeaking}
+                            disabled={isTurnBusy}
+                            className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 transition-colors cursor-pointer"
+                          >
+                            <Mic className="size-3.5" />
+                            Resume
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              void submitCurrentAnswer({ allowEmptyAsNotAnswered: true })
+                            }
+                            disabled={isTurnBusy || !canCompleteTurn}
+                            className="inline-flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-lg bg-[#0C356A] hover:bg-blue-900 disabled:opacity-50 text-white text-xs font-semibold transition-colors cursor-pointer"
+                          >
+                            <CheckCircle2 className="size-3.5" />
+                            {isTranscribing
+                              ? "Transcribing..."
+                              : isSavingAnswer
+                                ? "Saving..."
+                                : "Next"}
+                          </button>
+                        </div>
                       </div>
-                    </div>
+                    )}
 
-                    <div className="flex items-center gap-2 shrink-0">
-                      <button
-                        type="button"
-                        onClick={() => void handlePauseSpeaking()}
-                        disabled={isTurnBusy}
-                        className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 transition-colors cursor-pointer"
-                      >
-                        <Pause className="size-3.5" />
-                        Pause &amp; Edit
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() =>
-                          void submitCurrentAnswer({ allowEmptyAsNotAnswered: true })
-                        }
-                        disabled={isTurnBusy || !canCompleteTurn}
-                        className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#0C356A] hover:bg-blue-900 disabled:opacity-50 text-white text-xs font-semibold shadow-sm transition-all cursor-pointer"
-                      >
-                        <CheckCircle2 className="size-3.5" />
-                        {isTranscribing
-                          ? "Transcribing..."
-                          : isSavingAnswer
-                            ? "Saving..."
-                            : "I've Completed My Answer"}
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                {phase === "active" && turnStage === "reviewing" && (
-                  <div className="flex flex-wrap items-center justify-between gap-2.5 p-2.5 sm:px-3.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 animate-in fade-in">
-                    <div className="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-200">
-                      <Square className="size-3.5 text-slate-500 shrink-0" />
-                      <span className="font-medium">
-                        {isTranscribing
-                          ? "Transcribing your spoken answer with AI..."
-                          : canCompleteTurn
-                            ? "Review or refine your transcript, then click Completed & Next."
-                            : "No answer text captured yet — Resume Speaking, type below, or click Skip Question."}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={handleStartSpeaking}
-                        disabled={isTurnBusy}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 transition-colors cursor-pointer"
-                      >
-                        <Mic className="size-3.5" />
-                        Resume Speaking
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() =>
-                          void submitCurrentAnswer({ allowEmptyAsNotAnswered: true })
-                        }
-                        disabled={isTurnBusy || !canCompleteTurn}
-                        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-[#0C356A] hover:bg-blue-900 disabled:opacity-50 text-white text-xs font-semibold transition-colors cursor-pointer"
-                      >
-                        <CheckCircle2 className="size-3.5" />
-                        {isTranscribing
-                          ? "Transcribing..."
-                          : isSavingAnswer
-                            ? "Saving..."
-                            : "Completed & Next"}
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                {phase === "active" && turnStage === "round_complete" && (
-                  <div className="flex flex-wrap items-center justify-between gap-2.5 p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 animate-in fade-in">
-                    <div className="flex items-center gap-2.5">
-                      <CheckCircle2 className="size-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                      <div>
-                        <p className="text-xs font-bold text-emerald-900 dark:text-emerald-200">
-                          All Round Questions Completed
-                        </p>
-                        <p className="text-[11px] text-emerald-700/80 dark:text-emerald-400/80">
-                          Submit your session now for rubric scoring &amp; detailed AI feedback.
-                        </p>
+                    {phase === "active" && turnStage === "round_complete" && (
+                      <div className="flex flex-wrap items-center justify-between gap-2.5 p-2.5 sm:p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 animate-in fade-in">
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <CheckCircle2 className="size-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                          <div className="min-w-0">
+                            <p className="text-xs font-bold text-emerald-900 dark:text-emerald-200">
+                              All Round Questions Completed
+                            </p>
+                            <p className="hidden sm:block text-[11px] text-emerald-700/80 dark:text-emerald-400/80">
+                              Submit your session now for rubric scoring &amp; detailed AI feedback.
+                            </p>
+                          </div>
+                        </div>
+                        <IconButton
+                          type="button"
+                          action="submit"
+                          label="Finish & Score Round"
+                          onClick={handleSubmit}
+                          isLoading={false}
+                          disabled={isSavingAnswer}
+                          size="sm"
+                        />
                       </div>
-                    </div>
-                    <IconButton
-                      type="button"
-                      action="submit"
-                      label="Finish & Score Round"
-                      onClick={handleSubmit}
-                      isLoading={false}
-                      disabled={isSavingAnswer}
-                      size="sm"
-                    />
-                  </div>
-                )}
+                    )}
 
-                {/* Answer Transcript Textarea (hidden only when all questions are completed) */}
-                {turnStage !== "round_complete" && (
-                  <div className="flex items-end gap-2">
-                    <textarea
-                      rows={2}
-                      value={inputText}
-                      onChange={(e) => {
-                        setInputText(e.target.value);
-                        if (turnStage === "ready_to_speak" && e.target.value.trim().length > 0) {
-                          setTurnStage("reviewing");
-                        }
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" && !e.shiftKey) {
-                          e.preventDefault();
-                          if (canCompleteTurn) {
-                            void submitCurrentAnswer({ allowEmptyAsNotAnswered: true });
+                    {/* Answer Transcript Textarea (hidden only when all questions are completed) */}
+                    {turnStage !== "round_complete" && (
+                      <div className="flex items-end gap-2">
+                        <textarea
+                          rows={1}
+                          value={inputText}
+                          onChange={(e) => {
+                            setInputText(e.target.value);
+                            if (turnStage === "ready_to_speak" && e.target.value.trim().length > 0) {
+                              setTurnStage("reviewing");
+                            }
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" && !e.shiftKey) {
+                              e.preventDefault();
+                              if (canCompleteTurn) {
+                                void submitCurrentAnswer({ allowEmptyAsNotAnswered: true });
+                              }
+                            }
+                          }}
+                          placeholder={
+                            turnStage === "ai_speaking"
+                              ? "Listening to AI question... (or Skip)"
+                              : turnStage === "user_speaking"
+                                ? "Live spoken transcript..."
+                                : "Type your answer or tap Start Speaking..."
                           }
-                        }
-                      }}
-                      placeholder={
-                        turnStage === "ai_speaking"
-                          ? "Listening to AI question... (or click Skip & Answer Now)"
-                          : turnStage === "user_speaking"
-                            ? "Your live spoken response appears here as you speak..."
-                            : "Type your answer here or click Start Speaking Answer above..."
-                      }
-                      className="flex-1 px-3.5 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0C356A]/20 focus:border-[#0C356A] resize-none"
-                    />
+                          className="flex-1 min-h-[40px] sm:min-h-[56px] max-h-28 px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0C356A]/20 focus:border-[#0C356A] resize-none"
+                        />
 
-                    <IconButton
-                      type="button"
-                      onClick={() =>
-                        void submitCurrentAnswer({ allowEmptyAsNotAnswered: true })
-                      }
-                      isLoading={isTurnBusy}
-                      disabled={!canCompleteTurn || phase !== "active" || isTurnBusy}
-                      icon={<Send className="size-4" />}
-                      label={isTranscribing ? "Transcribing..." : "Complete"}
-                      variant="default"
-                    />
+                        <IconButton
+                          type="button"
+                          onClick={() =>
+                            void submitCurrentAnswer({ allowEmptyAsNotAnswered: true })
+                          }
+                          isLoading={isTurnBusy}
+                          disabled={!canCompleteTurn || phase !== "active" || isTurnBusy}
+                          icon={<Send className="size-4" />}
+                          label={isTranscribing ? "Transcribing..." : "Complete"}
+                          variant="default"
+                        />
+                      </div>
+                    )}
+
+                    {turnStage !== "round_complete" && (
+                      <div className="flex flex-wrap items-center justify-end gap-1.5 sm:gap-2 pt-0.5 text-xs">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            void submitCurrentAnswer({
+                              explicitTranscript: NOT_ANSWERED_LABEL,
+                              allowEmptyAsNotAnswered: true,
+                            })
+                          }
+                          disabled={
+                            phase !== "active" || isTurnBusy || questions.length === 0
+                          }
+                          className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-50 transition-colors cursor-pointer whitespace-nowrap"
+                        >
+                          <SkipForward className="size-3.5" />
+                          Skip Question
+                        </button>
+
+                        <IconButton
+                          type="button"
+                          action="submit"
+                          label="Finish & Score Round"
+                          onClick={handleSubmit}
+                          isLoading={phase === "evaluating"}
+                          disabled={
+                            phase === "evaluating" || isTurnBusy || questions.length === 0
+                          }
+                          loadingText="Evaluating..."
+                          size="sm"
+                        />
+                      </div>
+                    )}
                   </div>
                 )}
-
-                <div className="flex items-center justify-between gap-2 pt-0.5 text-xs">
-                  <span className="text-[11px] text-slate-500 font-medium">
-                    Question {Math.min(questionIndex + 1, questions.length)} of{" "}
-                    {questions.length}
-                  </span>
-
-                  {turnStage !== "round_complete" && (
-                    <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() =>
-                          void submitCurrentAnswer({
-                            explicitTranscript: NOT_ANSWERED_LABEL,
-                            allowEmptyAsNotAnswered: true,
-                          })
-                        }
-                        disabled={
-                          phase !== "active" || isTurnBusy || questions.length === 0
-                        }
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-50 transition-colors cursor-pointer"
-                      >
-                        <SkipForward className="size-3.5" />
-                        Skip Question
-                      </button>
-
-                      <IconButton
-                        type="button"
-                        action="submit"
-                        label="Finish & Score Round"
-                        onClick={handleSubmit}
-                        isLoading={phase === "evaluating"}
-                        disabled={
-                          phase === "evaluating" || isTurnBusy || questions.length === 0
-                        }
-                        loadingText="Evaluating..."
-                        size="sm"
-                      />
-                    </div>
-                  )}
-                </div>
               </div>
             </div>
           </div>
@@ -859,7 +953,7 @@ export default function AttemptModal({
               </div>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+            <div className="grid grid-cols-1 min-[360px]:grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-3.5">
               <div className="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
                 <div className="text-[11px] font-medium text-slate-500 uppercase">
                   Eye Contact Focus

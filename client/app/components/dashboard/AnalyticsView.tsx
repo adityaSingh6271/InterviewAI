@@ -185,7 +185,7 @@ export default function AnalyticsView() {
       </div>
 
       {/* Top 4 Real Metrics */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 min-[360px]:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {telemetryStats.map((stat, i) => (
           <div
             key={i}
@@ -225,7 +225,7 @@ export default function AnalyticsView() {
         <div className="lg:col-span-6 bg-linear-to-br from-[#0C356A] via-[#092B57] to-slate-900 rounded-xl p-5 sm:p-6 text-white shadow-2xs flex flex-col justify-between">
           <div className="space-y-4">
             <div>
-              <div className="flex items-center justify-between gap-2 mb-2">
+              <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
                 <div className="flex items-center gap-2 text-blue-200 text-[11px] font-medium uppercase tracking-wider">
                   <Sparkles className="w-3.5 h-3.5 text-blue-300" />
                   <span>AI Executive Diagnostic Synthesis</span>

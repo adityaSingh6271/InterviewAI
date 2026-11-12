@@ -28,9 +28,9 @@ import { requireAdmin, requireInstituteAccess } from "../utils/scope.util";
  *
  * Draft & ownership rules: a student may edit only a DRAFT they created
  * (the create wizard saves per step and publishes at the end), and may
- * delete any interview they created; published rows created by admins
- * remain admin-only. `createdBy` is stamped server-side and is never
- * client-writable.
+ * delete any interview visible in their institute (own drafts or published
+ * institute rows); someone else's DRAFT remains hidden (404). `createdBy` is
+ * stamped server-side and is never client-writable.
  */
 
 async function loadScoped(actor: AuthUser, id: string): Promise<{
@@ -153,12 +153,8 @@ export const interviewService = {
   },
 
   async remove(actor: AuthUser, id: string): Promise<void> {
-    const scope = await loadScoped(actor, id);
-    if (actor.portal === "student") {
-      if (scope.interview.createdBy !== actor.id) {
-        throw AppError.forbidden("You can only delete interviews you created");
-      }
-    } else {
+    await loadScoped(actor, id);
+    if (actor.portal !== "student") {
       requireAdmin(actor);
     }
     await interviewRepository.remove(id);

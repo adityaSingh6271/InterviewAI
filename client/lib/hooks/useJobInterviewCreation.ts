@@ -79,8 +79,9 @@ export function useJobInterviewCreation() {
   const [experienceLevel, setExperienceLevel] = useState("Mid-Level");
   const [sessionDurationMinutes, setSessionDurationMinutes] = useState(30);
 
-  // Is Submitting
+  // Is Submitting / Saving a wizard step
   const [isCreating, setIsCreating] = useState(false);
+  const [isSavingStep, setIsSavingStep] = useState(false);
 
   /**
    * Server-side draft: created when the wizard leaves step 1, PATCHed on
@@ -267,29 +268,41 @@ export function useJobInterviewCreation() {
   };
 
   const goToStep = async (step: WizardStep) => {
+    if (isSavingStep || isAnalyzing || isCreating) return;
+
     if (step === 2) {
       if (!jobDescription || jobDescription.trim().length < 30) {
         toast.error("Please enter a valid job description before proceeding.");
         return;
       }
-      // Step 1 persisted: create the draft on the way out, or re-save it
-      // when the user came back and edited the JD.
-      if (draftIdRef.current) {
-        await persistStep(toUpdatePayload({ jobDescription }));
-      } else {
-        await ensureDraft();
+      setIsSavingStep(true);
+      try {
+        // Step 1 persisted: create the draft on the way out, or re-save it
+        // when the user came back and edited the JD.
+        if (draftIdRef.current) {
+          await persistStep(toUpdatePayload({ jobDescription }));
+        } else {
+          await ensureDraft();
+        }
+        setCurrentStep(2);
+      } finally {
+        setIsSavingStep(false);
       }
-      setCurrentStep(2);
       return;
     }
 
     if (step === 3) {
       // Transition immediately to Step 3 so the AI Loading Progress UI appears instantly
       setCurrentStep(3);
-      // Per-step save: resume (extracted text only - never file bytes).
-      await persistStep(
-        resumeRef ? toUpdatePayload({ resume: resumeRef }) : { resume: null },
-      );
+      setIsSavingStep(true);
+      try {
+        // Per-step save: resume (extracted text only - never file bytes).
+        await persistStep(
+          resumeRef ? toUpdatePayload({ resume: resumeRef }) : { resume: null },
+        );
+      } finally {
+        setIsSavingStep(false);
+      }
       if (!extractedData) {
         const ok = await runAnalysis();
         if (!ok) {
@@ -301,18 +314,23 @@ export function useJobInterviewCreation() {
     }
 
     if (step === 4) {
-      // Per-step save: form overrides edited on the analysis step.
-      await persistStep(
-        toUpdatePayload({
-          targetRole: roleTitle,
-          company,
-          category,
-          industry,
-          experienceLevel,
-          sessionDurationMinutes,
-        }),
-      );
-      setCurrentStep(4);
+      setIsSavingStep(true);
+      try {
+        // Per-step save: form overrides edited on the analysis step.
+        await persistStep(
+          toUpdatePayload({
+            targetRole: roleTitle,
+            company,
+            category,
+            industry,
+            experienceLevel,
+            sessionDurationMinutes,
+          }),
+        );
+        setCurrentStep(4);
+      } finally {
+        setIsSavingStep(false);
+      }
       return;
     }
 
@@ -461,6 +479,7 @@ export function useJobInterviewCreation() {
     sessionDurationMinutes,
     setSessionDurationMinutes,
     // Creation
+    isSavingStep,
     isCreating,
     createFinalInterview,
   };
